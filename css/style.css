@@ -1093,7 +1093,7 @@ body {
     position: absolute;
     width: 10px;
     height: 10px;
-    background: gold;
+    background: #fbbf24;  /* تم التصحيح: تغيير من gold إلى #fbbf24 */
     border-radius: 50%;
     pointer-events: none;
     animation: sparkleAnim 1s forwards;
