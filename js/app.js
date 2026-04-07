@@ -679,7 +679,7 @@ function calculatePercentage(current, target) {
 }
 
 /**
- * تنسيق المبلغ كعملة
+ * تنسيق المبلغ كعملة* تنسيق المبلغ كعملة
  */
 function formatCurrency(amount) {
     return new Intl.NumberFormat('ar-SA', {
