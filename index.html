@@ -1,207 +1,288 @@
 <!DOCTYPE html>
-
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>خزنة | تتبع الأهداف المالية</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;900&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="تطبيق احترافي لتتبع الأهداف المالية">
+    <title>💰 تتبع الأهداف المالية</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <!-- خلفية متحركة -->
+    <div class="animated-bg">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+    </div>
 
-  <!-- ===== CONFETTI CANVAS ===== -->
+    <!-- الحاوية الرئيسية -->
+    <div class="container">
+        
+        <!-- رأس الصفحة -->
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-piggy-bank"></i>
+                <h1>تتبع الأهداف المالية</h1>
+            </div>
+            <p class="subtitle">حقق أحلامك المالية خطوة بخطوة</p>
+            
+            <!-- ملخص إجمالي -->
+            <div class="summary-cards">
+                <div class="summary-card total-goals">
+                    <i class="fas fa-bullseye"></i>
+                    <div class="summary-info">
+                        <span class="summary-value" id="totalGoals">0</span>
+                        <span class="summary-label">الأهداف</span>
+                    </div>
+                </div>
+                <div class="summary-card total-saved">
+                    <i class="fas fa-wallet"></i>
+                    <div class="summary-info">
+                        <span class="summary-value" id="totalSaved">0</span>
+                        <span class="summary-label">المدخرات</span>
+                    </div>
+                </div>
+                <div class="summary-card total-target">
+                    <i class="fas fa-flag-checkered"></i>
+                    <div class="summary-info">
+                        <span class="summary-value" id="totalTarget">0</span>
+                        <span class="summary-label">المستهدف</span>
+                    </div>
+                </div>
+            </div>
+        </header>
 
-<canvas id="confetti-canvas"></canvas>
+        <!-- زر إضافة هدف جديد -->
+        <button class="btn-add-goal" id="btnAddGoal">
+            <i class="fas fa-plus"></i>
+            <span>إضافة هدف مالي جديد</span>
+        </button>
 
-  <!-- ===== BACKGROUND GRID ===== -->
-
-  <div class="bg-grid"></div>
-  <div class="bg-glow"></div>
-
-  <!-- ===== HEADER ===== -->
-
-  <header class="site-header">
-    <div class="header-inner">
-      <div class="logo">
-        <span class="logo-icon">◈</span>
-        <span class="logo-text">خزنة</span>
-        <span class="logo-sub">الأهداف المالية</span>
-      </div>
-      <div class="header-stats">
-        <div class="stat-chip">
-          <span class="stat-label">إجمالي المدخرات</span>
-          <span class="stat-value" id="total-saved">0 MAD</span>
+        <!-- شبكة الأهداف -->
+        <div class="goals-grid" id="goalsGrid">
+            <!-- سيتم إضافة الأهداف هنا ديناميكياً -->
         </div>
-        <div class="stat-chip accent">
-          <span class="stat-label">الأهداف النشطة</span>
-          <span class="stat-value" id="total-goals">0</span>
+
+        <!-- رسالة عند عدم وجود أهداف -->
+        <div class="empty-state" id="emptyState">
+            <div class="empty-illustration">
+                <i class="fas fa-rocket"></i>
+            </div>
+            <h2>ابدأ رحلتك المالية</h2>
+            <p>لم تقم بإضافة أي أهداف بعد. اضغط على الزر أعلاه لإضافة هدفك الأول!</p>
         </div>
-      </div>
     </div>
-  </header>
 
-  <!-- ===== MAIN CONTENT ===== -->
+    <!-- نموذج إضافة/تعديل هدف -->
+    <div class="modal" id="goalModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">إضافة هدف جديد</h2>
+                <button class="btn-close" id="btnCloseModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form class="modal-form" id="goalForm">
+                <input type="hidden" id="goalId">
+                
+                <div class="form-group">
+                    <label for="goalName">
+                        <i class="fas fa-tag"></i>
+                        اسم الهدف
+                    </label>
+                    <input type="text" id="goalName" placeholder="مثال: شراء سيارة" required>
+                </div>
 
-  <main class="main-content">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="targetAmount">
+                            <i class="fas fa-bullseye"></i>
+                            المبلغ المستهدف
+                        </label>
+                        <input type="number" id="targetAmount" placeholder="10000" min="1" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="currentAmount">
+                            <i class="fas fa-coins"></i>
+                            المبلغ المدخر حالياً
+                        </label>
+                        <input type="number" id="currentAmount" placeholder="0" min="0" required>
+                    </div>
+                </div>
 
-```
-<!-- ADD GOAL BUTTON -->
-<div class="add-goal-bar">
-  <button class="btn-add-goal" id="btn-open-modal" aria-label="إضافة هدف جديد">
-    <span class="btn-icon">＋</span>
-    <span>هدف جديد</span>
-  </button>
-  <p class="empty-hint" id="empty-hint">لا توجد أهداف بعد — أضف هدفك الأول الآن ✦</p>
-</div>
+                <div class="form-group">
+                    <label>
+                        <i class="fas fa-palette"></i>
+                        اختر لون الهدف
+                    </label>
+                    <div class="color-picker" id="colorPicker">
+                        <button type="button" class="color-option" data-color="#6366f1" style="--color: #6366f1;"></button>
+                        <button type="button" class="color-option" data-color="#8b5cf6" style="--color: #8b5cf6;"></button>
+                        <button type="button" class="color-option" data-color="#ec4899" style="--color: #ec4899;"></button>
+                        <button type="button" class="color-option" data-color="#f43f5e" style="--color: #f43f5e;"></button>
+                        <button type="button" class="color-option" data-color="#f97316" style="--color: #f97316;"></button>
+                        <button type="button" class="color-option" data-color="#eab308" style="--color: #eab308;"></button>
+                        <button type="button" class="color-option" data-color="#22c55e" style="--color: #22c55e;"></button>
+                        <button type="button" class="color-option" data-color="#14b8a6" style="--color: #14b8a6;"></button>
+                        <button type="button" class="color-option" data-color="#06b6d4" style="--color: #06b6d4;"></button>
+                        <button type="button" class="color-option" data-color="#3b82f6" style="--color: #3b82f6;"></button>
+                    </div>
+                    <input type="hidden" id="selectedColor" value="#6366f1">
+                </div>
 
-<!-- GOALS GRID -->
-<div class="goals-grid" id="goals-grid"></div>
-```
+                <div class="form-group">
+                    <label>
+                        <i class="fas fa-icons"></i>
+                        اختر أيقونة الهدف
+                    </label>
+                    <div class="icon-picker" id="iconPicker">
+                        <button type="button" class="icon-option active" data-icon="fa-car">
+                            <i class="fas fa-car"></i>
+                        </button>
+                        <button type="button" class="icon-option" data-icon="fa-home">
+                            <i class="fas fa-home"></i>
+                        </button>
+                        <button type="button" class="icon-option" data-icon="fa-plane">
+                            <i class="fas fa-plane"></i>
+                        </button>
+                        <button type="button" class="icon-option" data-icon="fa-graduation-cap">
+                            <i class="fas fa-graduation-cap"></i>
+                        </button>
+                        <button type="button" class="icon-option" data-icon="fa-heart">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                        <button type="button" class="icon-option" data-icon="fa-briefcase">
+                            <i class="fas fa-briefcase"></i>
+                        </button>
+                        <button type="button" class="icon-option" data-icon="fa-laptop">
+                            <i class="fas fa-laptop"></i>
+                        </button>
+                        <button type="button" class="icon-option" data-icon="fa-mobile-alt">
+                            <i class="fas fa-mobile-alt"></i>
+                        </button>
+                        <button type="button" class="icon-option" data-icon="fa-shopping-bag">
+                            <i class="fas fa-shopping-bag"></i>
+                        </button>
+                        <button type="button" class="icon-option" data-icon="fa-gift">
+                            <i class="fas fa-gift"></i>
+                        </button>
+                        <button type="button" class="icon-option" data-icon="fa-coins">
+                            <i class="fas fa-coins"></i>
+                        </button>
+                        <button type="button" class="icon-option" data-icon="fa-piggy-bank">
+                            <i class="fas fa-piggy-bank"></i>
+                        </button>
+                    </div>
+                    <input type="hidden" id="selectedIcon" value="fa-car">
+                </div>
 
-  </main>
-
-  <!-- ===== MODAL: ADD / EDIT GOAL ===== -->
-
-  <div class="modal-overlay" id="goal-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-    <div class="modal-card">
-      <button class="modal-close" id="modal-close" aria-label="إغلاق">✕</button>
-      <h2 class="modal-title" id="modal-title">إضافة هدف جديد</h2>
-
-```
-  <div class="form-group">
-    <label for="goal-name">اسم الهدف</label>
-    <input type="text" id="goal-name" placeholder="مثال: سيارة أحلامي" maxlength="40" autocomplete="off" />
-  </div>
-
-  <div class="form-row">
-    <div class="form-group">
-      <label for="goal-target">المبلغ المستهدف (MAD)</label>
-      <input type="number" id="goal-target" placeholder="50000" min="1" />
-    </div>
-    <div class="form-group">
-      <label for="goal-saved">المدخر حالياً (MAD)</label>
-      <input type="number" id="goal-saved" placeholder="0" min="0" />
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label>اختر أيقونة</label>
-    <div class="icon-picker" id="icon-picker"></div>
-  </div>
-
-  <div class="form-group">
-    <label>اختر لون الهدف</label>
-    <div class="color-picker" id="color-picker"></div>
-  </div>
-
-  <div class="modal-actions">
-    <button class="btn-cancel" id="btn-cancel">إلغاء</button>
-    <button class="btn-save" id="btn-save">حفظ الهدف</button>
-  </div>
-</div>
-```
-
-  </div>
-
-  <!-- ===== MODAL: ADD AMOUNT ===== -->
-
-  <div class="modal-overlay" id="amount-modal" role="dialog" aria-modal="true">
-    <div class="modal-card small">
-      <button class="modal-close" id="amount-modal-close" aria-label="إغلاق">✕</button>
-      <h2 class="modal-title">إضافة مبلغ</h2>
-      <p class="modal-sub" id="amount-modal-goal-name">—</p>
-
-```
-  <div class="form-group">
-    <label for="add-amount-input">المبلغ (MAD)</label>
-    <input type="number" id="add-amount-input" placeholder="500" min="1" autocomplete="off" />
-  </div>
-
-  <div class="modal-actions">
-    <button class="btn-cancel" id="amount-btn-cancel">إلغاء</button>
-    <button class="btn-save" id="amount-btn-save">إضافة</button>
-  </div>
-</div>
-```
-
-  </div>
-
-  <!-- ===== MODAL: HISTORY ===== -->
-
-  <div class="modal-overlay" id="history-modal" role="dialog" aria-modal="true">
-    <div class="modal-card medium">
-      <button class="modal-close" id="history-modal-close" aria-label="إغلاق">✕</button>
-      <h2 class="modal-title">سجل المدخرات</h2>
-      <p class="modal-sub" id="history-modal-goal-name">—</p>
-      <div class="history-list" id="history-list"></div>
-    </div>
-  </div>
-
-  <!-- ===== GOAL CARD TEMPLATE ===== -->
-
-  <template id="goal-card-template">
-    <article class="goal-card" data-id="">
-      <div class="card-header">
-        <div class="card-icon-wrap">
-          <span class="card-icon"></span>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="btnCancel">إلغاء</button>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i>
+                        حفظ الهدف
+                    </button>
+                </div>
+            </form>
         </div>
-        <div class="card-title-group">
-          <h3 class="card-title"></h3>
-          <span class="card-status"></span>
+    </div>
+
+    <!-- نموذج إضافة مبلغ -->
+    <div class="modal" id="addAmountModal">
+        <div class="modal-content modal-small">
+            <div class="modal-header">
+                <h2>إضافة مبلغ للهدف</h2>
+                <button class="btn-close" id="btnCloseAddAmount">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form class="modal-form" id="addAmountForm">
+                <input type="hidden" id="addAmountGoalId">
+                
+                <div class="form-group">
+                    <label for="amountToAdd">
+                        <i class="fas fa-plus-circle"></i>
+                        المبلغ المراد إضافته
+                    </label>
+                    <input type="number" id="amountToAdd" placeholder="أدخل المبلغ" min="1" required>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="btnCancelAddAmount">إلغاء</button>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-plus"></i>
+                        إضافة
+                    </button>
+                </div>
+            </form>
         </div>
-        <div class="card-menu">
-          <button class="btn-menu" aria-label="خيارات">⋯</button>
-          <div class="dropdown-menu">
-            <button class="drop-item btn-edit">✎ تعديل</button>
-            <button class="drop-item btn-history">⌚ السجل</button>
-            <button class="drop-item btn-delete danger">✕ حذف</button>
-          </div>
+    </div>
+
+    <!-- نموذج سجل التبرعات -->
+    <div class="modal" id="historyModal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2 id="historyTitle">سجل المدخرات</h2>
+                <button class="btn-close" id="btnCloseHistory">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="history-content" id="historyContent">
+                <!-- سيتم إضافة السجل هنا ديناميكياً -->
+            </div>
         </div>
-      </div>
-
-```
-  <div class="card-donut-wrap">
-    <svg class="donut-chart" viewBox="0 0 120 120">
-      <circle class="donut-bg" cx="60" cy="60" r="46" />
-      <circle class="donut-fill" cx="60" cy="60" r="46" />
-    </svg>
-    <div class="donut-center">
-      <span class="donut-percent"></span>
-      <span class="donut-label">مكتمل</span>
     </div>
-  </div>
 
-  <div class="card-amounts">
-    <div class="amount-item">
-      <span class="amount-label">المُدخَّر</span>
-      <span class="amount-value saved-val"></span>
+    <!-- نافذة تأكيد الحذف -->
+    <div class="modal" id="deleteModal">
+        <div class="modal-content modal-small">
+            <div class="modal-header">
+                <h2>تأكيد الحذف</h2>
+                <button class="btn-close" id="btnCloseDelete">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="delete-confirmation">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p>هل أنت متأكد من حذف هذا الهدف؟</p>
+                <p class="delete-warning">لا يمكن التراجع عن هذا الإجراء.</p>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn-secondary" id="btnCancelDelete">إلغاء</button>
+                <button type="button" class="btn-danger" id="btnConfirmDelete">
+                    <i class="fas fa-trash"></i>
+                    حذف
+                </button>
+            </div>
+        </div>
     </div>
-    <div class="amount-divider"></div>
-    <div class="amount-item">
-      <span class="amount-label">المستهدف</span>
-      <span class="amount-value target-val"></span>
-    </div>
-  </div>
 
-  <div class="progress-bar-wrap">
-    <div class="progress-bar-track">
-      <div class="progress-bar-fill"></div>
-    </div>
-  </div>
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
 
-  <div class="card-footer">
-    <span class="remaining-label"></span>
-    <button class="btn-add-amount">＋ إضافة مبلغ</button>
-  </div>
-</article>
-```
-
-  </template>
-
-  <script src="app.js"></script>
-
+    <!-- JavaScript -->
+    <script src="js/app.js"></script>
 </body>
 </html>
