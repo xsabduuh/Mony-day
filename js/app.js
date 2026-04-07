@@ -684,7 +684,7 @@ function calculatePercentage(current, target) {
 function formatCurrency(amount) {
     return new Intl.NumberFormat('ar-SA', {
         style: 'currency',
-        currency: 'SAR',
+        currency: 'dh',
         minimumFractionDigits: 0,
         maximumFractionDigits: 0
     }).format(amount);
