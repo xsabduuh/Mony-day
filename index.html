@@ -2,8 +2,34 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="تطبيق احترافي لتتبع الأهداف المالية">
     <title>💰 تتبع الأهداف المالية</title>
+    
+    <!-- منع نسخ النص -->
+    <style>
+        * {
+            user-select: none !important;
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        /* السماح بالكتابة داخل الحقول فقط */
+        input, textarea {
+            user-select: auto !important;
+            -webkit-user-select: auto !important;
+            -moz-user-select: auto !important;
+            -ms-user-select: auto !important;
+        }
+        
+        /* منع تكبير الشاشة عند التركيز على الحقول */
+        input:focus, textarea:focus, select:focus, button:focus {
+            font-size: 16px !important;
+        }
+    </style>
+    
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -51,7 +77,7 @@
         .btn-close{background:rgba(255,255,255,0.1);border:none;border-radius:8px;width:35px;height:35px;color:#fff;cursor:pointer}
         .form-group{margin-bottom:1rem}
         .form-group label{display:block;margin-bottom:0.5rem;color:rgba(255,255,255,0.7)}
-        .form-group input{width:100%;padding:0.8rem;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:#fff}
+        .form-group input{width:100%;padding:0.8rem;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:#fff;font-size:16px}
         .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
         .color-picker{display:flex;flex-wrap:wrap;gap:0.5rem}
         .color-option{width:40px;height:40px;border-radius:50%;border:2px solid transparent;cursor:pointer}
@@ -68,6 +94,24 @@
         .toast{background:#1a1a2e;border-radius:10px;padding:0.8rem 1.2rem;margin-bottom:0.5rem;display:flex;align-items:center;gap:0.5rem}
         .toast.success{border-right:3px solid #22c55e}
         @media(max-width:768px){.summary-cards{grid-template-columns:1fr}.form-row{grid-template-columns:1fr}}
+        
+        /* منع تحديد النص في التطبيق بالكامل */
+        body {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        
+        /* السماح بالكتابة فقط في الحقول */
+        input, textarea {
+            -webkit-user-select: text !important;
+            user-select: text !important;
+        }
+        
+        /* منع التكبير التلقائي عند التركيز على الحقول */
+        input, textarea, select {
+            font-size: 16px !important;
+        }
     </style>
 </head>
 <body>
