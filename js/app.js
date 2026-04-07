@@ -679,12 +679,11 @@ function calculatePercentage(current, target) {
 }
 
 /**
- * تنسيق المبلغ كعملة* تنسيق المبلغ كعملة
- */
+ * تنسيق المبلغ كعملة* تنسيق المبلغ كعملة/* تنسيق المبلغ كعملة */
 function formatCurrency(amount) {
-    return new Intl.NumberFormat('ar-SA', {
+    return new Intl.NumberFormat('ar-MA', {
         style: 'currency',
-        currency: 'SAR',
+        currency: 'MAD',
         minimumFractionDigits: 0,
         maximumFractionDigits: 0
     }).format(amount);
