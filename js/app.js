@@ -679,7 +679,8 @@ function calculatePercentage(current, target) {
 }
 
 /**
- * تنسيق المبلغ كعملة* تنسيق المبلغ كعملة/* تنسيق المبلغ كعملة */
+ * تنسيق المبلغ كعملة
+ */
 function formatCurrency(amount) {
     return new Intl.NumberFormat('ar-MA', {
         style: 'currency',
@@ -707,7 +708,8 @@ function formatDate(dateString) {
  * توليد معرف فريد
  */
 function generateId() {
-    return Date.now().toString(36) + Math.random().toString(36).substr(2);
+    // تم التصحيح: استخدام substring بدلاً من substr
+    return Date.now().toString(36) + Math.random().toString(36).substring(2);
 }
 
 /**
@@ -776,14 +778,16 @@ function celebrateGoal(goalId) {
     const x = (rect.left + rect.width / 2) / window.innerWidth;
     const y = (rect.top + rect.height / 2) / window.innerHeight;
     
-    confetti({
-        particleCount: 150,
-        spread: 70,
-        origin: { x, y },
-        colors: ['#22c55e', '#4ade80', '#fbbf24', '#f59e0b', '#ec4899'],
-        disableForReducedMotion: true,
-        zIndex: 2000
-    });
+    if (typeof confetti === 'function') {
+        confetti({
+            particleCount: 150,
+            spread: 70,
+            origin: { x, y },
+            colors: ['#22c55e', '#4ade80', '#fbbf24', '#f59e0b', '#ec4899'],
+            disableForReducedMotion: true,
+            zIndex: 2000
+        });
+    }
     
     // Sparkle effect
     createSparkles(card);
@@ -824,7 +828,8 @@ function createSparkles(element) {
             sparkle.className = 'sparkle';
             sparkle.style.left = centerX + (Math.random() - 0.5) * 200 + 'px';
             sparkle.style.top = centerY + (Math.random() - 0.5) * 200 + 'px';
-            sparkle.style.background = ['#gold', '#fbbf24', '#f59e0b', '#22c55e'][Math.floor(Math.random() * 4)];
+            // تم التصحيح: إزالة '#gold' الخاطئ
+            sparkle.style.background = ['#fbbf24', '#f59e0b', '#22c55e', '#ec4899'][Math.floor(Math.random() * 4)];
             document.body.appendChild(sparkle);
             
             setTimeout(() => sparkle.remove(), 1000);
